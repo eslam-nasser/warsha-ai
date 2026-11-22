@@ -7,6 +7,7 @@ Warsha is a framework that takes a vague idea to a live, monitored product with 
 | Path | What it is |
 | --- | --- |
 | `docs/spec.md` | The full build spec. Exported from the Claude Docs doc linked at its top. The doc is the source of truth. |
+| `docs/getting-started.md` | Repo layout and setup steps. The README is the owner's own introduction: do not rewrite it. |
 | `config/warsha.schema.json` | JSON Schema for a project's `warsha.yaml`. |
 | `examples/` | Example project configs. They must validate. |
 | `pipeline/stages.yaml` | The eleven stages: order, inputs, outputs, decision kind, fail target. |
