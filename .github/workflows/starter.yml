@@ -1,0 +1,29 @@
+# Checks the starter template in this repo. Products copy starter/.github/workflows/ci.yml instead.
+name: starter
+
+on:
+  push:
+    branches: [main]
+    paths: ["starter/**", ".github/workflows/starter.yml"]
+  pull_request:
+    paths: ["starter/**", ".github/workflows/starter.yml"]
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: starter
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: starter/package-lock.json
+      - run: npm ci
+      - run: npm run check
+      - run: npm run build
+      - run: npx playwright install --with-deps chromium
+      - run: npm run test:e2e
+      - run: npm audit --audit-level=high --omit=dev

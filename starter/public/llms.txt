@@ -1,0 +1,5 @@
+# Product name
+
+> One sentence on what the product is, who it is for, and what it costs.
+
+Replace this file in Build with the product's real summary and links to its key public pages.

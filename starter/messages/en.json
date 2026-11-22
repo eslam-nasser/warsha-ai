@@ -1,0 +1,24 @@
+{
+  "meta": {
+    "title": "Product name",
+    "description": "One sentence on what the product is, who it is for, and what it costs."
+  },
+  "home": {
+    "heading": "Product name",
+    "lead": "Replace this with the product's one-line promise from the product context file.",
+    "cta": "Get started",
+    "updated": "Updated {date}"
+  },
+  "admin": {
+    "title": "Admin",
+    "nav": {
+      "overview": "Overview",
+      "settings": "Settings"
+    },
+    "overview": {
+      "heading": "Overview",
+      "empty": "Nothing here yet."
+    },
+    "back": "Back to site"
+  }
+}

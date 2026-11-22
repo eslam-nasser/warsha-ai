@@ -17,6 +17,7 @@ Warsha is a framework that takes a vague idea to a live, monitored product with 
 | `scripts/linear-setup.mjs` | Sets up the Linear workspace. Reads `LINEAR_API_KEY` from `.env.local`. |
 | `scripts/intake.mjs` | Stage 0 intake: Linear project, brief, config, CEO decision issue. |
 | `config/linear.json` | Linear ids written by `linear:setup`. No secrets. |
+| `starter/` | The product starter template. It has its own `CLAUDE.md` and `package.json`. Run its checks from inside `starter/`. |
 
 ## Working rules
 
@@ -25,4 +26,5 @@ Warsha is a framework that takes a vague idea to a live, monitored product with 
 - Run `npm run validate` before committing a change to the schema, `pipeline/` or `examples/`.
 - Stage keys are fixed: intake, clarify, research, edge, ui, spec, build, review, security, ship, monitor. Use them everywhere.
 - Never print, log or commit `LINEAR_API_KEY` or any other key. Keys live only in `.env.local`.
+- The P: drive is nearly full. Delete `starter/.next`, `test-results` and `playwright-report` after a build or test run.
 - Write prose in plain, short sentences. No em dashes.
