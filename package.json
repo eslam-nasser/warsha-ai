@@ -5,12 +5,15 @@
   "description": "Framework that takes a vague idea to a live, monitored product with Claude agents.",
   "type": "module",
   "scripts": {
-    "validate": "node scripts/validate-config.mjs"
+    "validate": "node scripts/validate-config.mjs",
+    "linear:setup": "node scripts/linear-setup.mjs",
+    "intake": "node scripts/intake.mjs"
   },
   "engines": {
     "node": ">=22"
   },
   "devDependencies": {
+    "@linear/sdk": "101.1.0",
     "ajv": "8.20.0",
     "ajv-formats": "3.0.1",
     "yaml": "2.9.1"
