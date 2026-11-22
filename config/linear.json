@@ -1,0 +1,56 @@
+{
+  "workspace": {
+    "id": "c46e1941-1757-439a-b17f-3de589eec8f7",
+    "urlKey": "warsha-ai"
+  },
+  "ceo": {
+    "id": "c77273cc-6bb8-45f2-b27c-d22747635736",
+    "name": "Eslam Nasser"
+  },
+  "teams": {
+    "Ideas": {
+      "id": "44eb25eb-126d-4e0a-9650-e39feeb120e0",
+      "key": "IDEA"
+    },
+    "Delivery": {
+      "id": "46ae46d8-e573-4ea6-a538-21e277448f62",
+      "key": "DEL"
+    }
+  },
+  "projectStatuses": {
+    "Intake": "55e4739d-48f5-4003-ad09-038b7cd90cb6",
+    "Clarify": "501edc3a-b5b7-4a39-a3a0-db6ef4a5b502",
+    "Research": "327ff975-ae2c-4d51-8b96-9c6f0a6f36aa",
+    "Edge": "7b93bab2-2dd2-4945-9ac0-c426f4c5f4ce",
+    "UI concepts": "420169d5-96b7-4e02-8a33-a297128dfc8d",
+    "Spec": "c1cb252a-38d6-450b-a360-68c5eda25ad7",
+    "Build": "c1b98539-15a9-415b-a887-8be7382818fb",
+    "Review": "42e500c8-e89a-4617-b5f8-3ff45cb80e31",
+    "Ship": "a9b0fe76-a874-4e63-835c-ac9b7bd9313a",
+    "Live": "7e493a58-c832-4fde-b08e-bc592a448f7c",
+    "Killed": "b71f9389-5a36-43fe-a443-360a08000b5e"
+  },
+  "labels": {
+    "decision": "09f4474e-969d-41ca-a243-04a58460db05",
+    "build": "ef43be08-4a8d-4d37-91fa-2924fa7f0647",
+    "review-finding": "db806f7c-78c1-4e7b-bd7d-63dd482d0e78",
+    "bug-from-sentry": "bd15eb4b-7e87-4bf0-aaaa-79acd61ac701",
+    "client-request": "32b59b96-d69b-48ea-babf-3844b9a2249e",
+    "go-kill": "0f941418-b4e3-41b8-af4e-97b0d82554b2",
+    "edge": "926bbf9c-e678-414e-848a-43268a01a55a",
+    "design": "fa2af8ff-ca30-4aed-bb8a-33512c178e9a",
+    "ship": "dc316c8d-3446-44a7-9369-19bc1df6b050",
+    "unstick": "a3b88edb-ee5f-4056-b23e-acb2b2e71aa8",
+    "high-risk": "83754eae-a8c3-4cdb-ba0e-9ff52f479895",
+    "gate": "9ae5928e-a959-4e73-bd9d-a84d0d053d0e",
+    "notify": "416632f8-886f-4721-b677-3559368877a3",
+    "autopilot": "4e5c1659-c84c-41fa-b622-5a7518ac35b0"
+  },
+  "views": {
+    "CEO decisions": "90d80a0c-e851-4ba0-83f4-b92df713793f",
+    "Portfolio": "fbf5d8f7-d0ee-4e97-94a3-f3ccbd84b2ce",
+    "Notify feed": "21ad9f2c-25ed-4d3a-8bbb-bdf668edb526",
+    "Engine room": "64027830-843d-4b29-8c61-9c921a7b7acd",
+    "Stuck": "b7de6de9-7f3a-4e1e-bd98-c1d2c2a43874"
+  }
+}

@@ -21,9 +21,20 @@ for (const t of TEAMS) {
   let team = teams.find((x) => x.name === t.name || x.key === t.key);
   if (team) log("exists", `team ${team.name}`);
   else {
-    const res = await linear.createTeam({ name: t.name, key: t.key, description: t.description });
-    team = await res.team;
-    log("created", `team ${team.name} (${team.key})`);
+    try {
+      const res = await linear.createTeam({ name: t.name, key: t.key, description: t.description });
+      team = await res.team;
+      log("created", `team ${team.name} (${team.key})`);
+    } catch (err) {
+      // The free plan allows two teams. Adopt a team that is not one of Warsha's by renaming it.
+      const spare = teams.find((x) => !TEAMS.some((w) => w.name === x.name || w.key === x.key));
+      if (!/limit of teams/i.test(err.message) || !spare) throw err;
+      const old = `${spare.name} (${spare.key})`;
+      await linear.updateTeam(spare.id, { name: t.name, key: t.key, description: t.description });
+      team = await linear.team(spare.id);
+      log("renamed", `team ${old} to ${team.name} (${team.key}), because the plan's team limit was reached`);
+    }
+    teams.push(team);
   }
   out.teams[t.name] = { id: team.id, key: team.key };
 }
