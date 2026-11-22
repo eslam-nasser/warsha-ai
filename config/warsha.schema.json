@@ -1,0 +1,172 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/eslam-nasser/warsha-ai/config/warsha.schema.json",
+  "title": "Warsha project config",
+  "description": "One file per project. The orchestrator reads it before every stage. A changed value takes effect at the next stage. See docs/spec.md, section Project config.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["project", "type", "effort", "autopilot", "stack", "i18n", "monitoring"],
+  "$defs": {
+    "stage": {
+      "type": "string",
+      "enum": ["intake", "clarify", "research", "edge", "ui", "spec", "build", "review", "security", "ship", "monitor"]
+    },
+    "dial": { "type": "integer", "minimum": 1, "maximum": 5 },
+    "mode": { "type": "string", "enum": ["gate", "notify", "autopilot"] },
+    "urlList": { "type": "array", "items": { "type": "string" }, "default": [] }
+  },
+  "properties": {
+    "project": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
+      "description": "Kebab-case slug. Also the default Sentry and PostHog project name."
+    },
+    "type": { "type": "string", "enum": ["client", "internal"] },
+    "client": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "contact"],
+      "properties": {
+        "name": { "type": "string" },
+        "contact": { "type": "string", "description": "Who relays client answers in v1: the CEO or a named account contact." }
+      }
+    },
+    "refs": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "The orchestrator always asks for refs. An empty list means the answer was none.",
+      "properties": {
+        "competitors": { "$ref": "#/$defs/urlList" },
+        "ui_liked": { "$ref": "#/$defs/urlList" },
+        "ui_disliked": { "$ref": "#/$defs/urlList" },
+        "brand_assets": { "type": "string", "description": "Path to logo, colours and fonts, if they exist." }
+      }
+    },
+    "constraints": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "deadline": { "type": "string", "format": "date" },
+        "budget_usd": { "type": "number", "minimum": 0 },
+        "must_have": { "type": "array", "items": { "type": "string" } },
+        "hard_limits": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "effort": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["preset"],
+      "properties": {
+        "preset": { "type": "string", "enum": ["spike", "standard", "flagship", "design-led", "admin-tool"] },
+        "overrides": {
+          "type": "object",
+          "propertyNames": { "$ref": "#/$defs/stage" },
+          "additionalProperties": { "$ref": "#/$defs/dial" }
+        }
+      }
+    },
+    "autopilot": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["default"],
+      "properties": {
+        "default": { "$ref": "#/$defs/mode" },
+        "stages": {
+          "type": "object",
+          "propertyNames": { "$ref": "#/$defs/stage" },
+          "additionalProperties": { "$ref": "#/$defs/mode" }
+        },
+        "always_gate": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "first_production_deploy": { "type": "boolean", "default": true },
+            "client_messages": { "type": "boolean", "default": true }
+          }
+        },
+        "undo_window_hours": { "type": "integer", "minimum": 0, "default": 24 }
+      }
+    },
+    "limits": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "review_round_cap": { "type": "integer", "minimum": 1, "description": "Set by the review dial unless stated." },
+        "ci_retry_cap": { "type": "integer", "minimum": 0, "default": 2 },
+        "stage_budget_alert": { "type": "number", "exclusiveMinimum": 0, "maximum": 1, "default": 0.8 }
+      }
+    },
+    "models": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Tier to model. A new model release is a one-line change here.",
+      "properties": {
+        "fast": { "type": "string", "default": "haiku" },
+        "mid": { "type": "string", "default": "sonnet" },
+        "top": { "type": "string", "default": "opus" },
+        "peak": { "type": "string", "default": "fable" }
+      }
+    },
+    "ui": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "tracks": { "type": "array", "items": { "type": "string", "enum": ["public", "admin"] }, "uniqueItems": true },
+        "galleries": { "type": "array", "items": { "type": "string" } },
+        "human_designer_pass": { "type": "boolean", "default": false }
+      }
+    },
+    "stack": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["profile"],
+      "properties": {
+        "profile": { "type": "string", "enum": ["web", "backend-heavy"] },
+        "custom": { "type": "string", "description": "A client-requested stack. Recorded here and priced in at stage 2." }
+      }
+    },
+    "i18n": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["locales"],
+      "properties": {
+        "locales": { "type": "array", "items": { "type": "string" }, "minItems": 1, "uniqueItems": true },
+        "default": { "type": "string" }
+      }
+    },
+    "content": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "image_model": { "type": "string", "default": "gpt-image" },
+        "image_api_key_set": { "type": "boolean", "default": false, "description": "False means labelled placeholder images." }
+      }
+    },
+    "security": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "pr_review": { "type": "boolean", "default": true },
+        "deep_audit": { "type": "boolean", "default": true },
+        "scanners": { "type": "array", "items": { "type": "string", "enum": ["secrets", "dependencies"] }, "uniqueItems": true }
+      }
+    },
+    "seo_aeo": { "type": "boolean", "default": true },
+    "monitoring": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["sentry_project", "posthog_project"],
+      "properties": {
+        "sentry_project": { "type": "string" },
+        "posthog_project": { "type": "string" },
+        "ship_gate": {
+          "type": "array",
+          "items": { "type": "string", "enum": ["events", "errors", "replay", "alerts", "privacy"] },
+          "uniqueItems": true
+        }
+      }
+    }
+  },
+  "if": { "properties": { "type": { "const": "client" } } },
+  "then": { "required": ["client"] }
+}

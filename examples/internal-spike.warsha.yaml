@@ -1,0 +1,30 @@
+# Example internal project at the Spike preset, the shape of the first manual run (Build plan step 2).
+# yaml-language-server: $schema=../config/warsha.schema.json
+project: first-internal
+type: internal
+
+refs:
+  competitors: []
+  ui_liked: []
+  ui_disliked: []
+
+effort:
+  preset: spike
+
+autopilot:
+  default: gate          # every stage gated on the first run
+  always_gate:
+    first_production_deploy: true
+    client_messages: true
+
+stack:
+  profile: web
+
+i18n:
+  locales: [en]
+  default: en
+
+monitoring:
+  sentry_project: first-internal
+  posthog_project: first-internal
+  ship_gate: [events, errors, replay, alerts, privacy]

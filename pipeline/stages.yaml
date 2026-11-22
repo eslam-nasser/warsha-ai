@@ -1,0 +1,126 @@
+# The eleven pipeline stages, in order. run-stage reads this file.
+# Source: docs/spec.md, sections Pipeline stages and Decision gates.
+# `key` matches the stage names in config/warsha.schema.json.
+# `linear_status` is the Linear project status while the stage runs.
+# `decision` is the gate the CEO answers when the stage runs in Gate mode.
+
+stages:
+  - id: 0
+    key: intake
+    name: Intake
+    linear_status: Intake
+    input: [idea, refs, settings]
+    workers: Orchestrator asks, CEO answers
+    output: [project-brief, warsha.yaml]
+    decision: null
+
+  - id: 1
+    key: clarify
+    name: Clarify
+    linear_status: Clarify
+    input: [project-brief]
+    workers: Clarify agent, question rounds
+    output: [problem-statement]
+    decision: null
+    notes: Questions go to the CEO only if they change scope or price. The rest get a stated assumption.
+
+  - id: 2
+    key: research
+    name: Research
+    linear_status: Research
+    input: [problem-statement, refs.competitors]
+    workers: Research agents
+    output: [market-brief]
+    decision: go-kill
+    notes: Every claim carries a source link. Client work adds a price and timeline estimate.
+
+  - id: 3
+    key: edge
+    name: Edge
+    linear_status: Edge
+    input: [market-brief]
+    workers: Strategy agent plus a critic
+    output: [edge-options]
+    decision: edge
+
+  - id: 4
+    key: ui
+    name: UI concepts
+    linear_status: UI concepts
+    input: [edge-options, refs.ui_liked, refs.ui_disliked]
+    workers: Design agent in Claude Design, design critic, copy and image agents
+    output: [taste-board, design-system, concepts]
+    decision: design
+    client_gate: true
+
+  - id: 5
+    key: spec
+    name: Spec and plan
+    linear_status: Spec
+    input: [edge-options, concepts]
+    workers: PM, architect and planner agents
+    output: [prd, architecture, event-plan, sentry-plan, linear-issues]
+    decision: null
+
+  - id: 6
+    key: build
+    name: Build
+    linear_status: Build
+    input: [linear-issues]
+    workers: Claude Code agents, one issue each
+    output: [pull-requests]
+    decision: null
+
+  - id: 7
+    key: review
+    name: Review loop
+    linear_status: Review
+    input: [pull-requests, staging-link]
+    workers: Code, UX, tracking, content and SEO reviewers
+    output: [reviewer-findings]
+    decision: null
+    on_fail: build
+    notes: Stops at the round cap and opens an unstick decision.
+
+  - id: 8
+    key: security
+    name: Security check
+    linear_status: Review
+    input: [staging-link]
+    workers: Security reviewers and scanners
+    output: [security-report]
+    decision: null
+    on_fail: build
+    notes: Any blocker stops the ship.
+
+  - id: 9
+    key: ship
+    name: Ship
+    linear_status: Ship
+    input: [scorecard]
+    workers: Release agent
+    output: [production-deploy, release-notes]
+    decision: ship
+    client_gate: true
+    notes: The first production deploy is always gated unless autopilot.always_gate.first_production_deploy is false.
+
+  - id: 10
+    key: monitor
+    name: Monitor
+    linear_status: Live
+    input: [live-product]
+    workers: Sentry, PostHog, triage agent
+    output: [linear-issues, health-note]
+    decision: null
+    on_fail: build
+
+decisions:
+  go-kill: { question: Go or kill?, gets: Market size, top competitors, risks, price estimate for client work }
+  edge: { question: Which edge do we pick?, gets: 2 to 3 options with the case for and against }
+  design: { question: Which design do we pick?, gets: Taste board and concepts side by side with critic scores }
+  ship: { question: Ship or not?, gets: One-page scorecard and a staging link }
+  unstick: { question: How do we get unstuck?, gets: What is stuck, cost so far, three ways forward }
+
+# Any stage drops back to Gate when one of these happens.
+auto_gate_triggers: [round_cap, budget_guard, high_risk_change]
+high_risk: [payments, auth, permissions, data_deletion]

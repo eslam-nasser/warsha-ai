@@ -1,0 +1,78 @@
+# Example client project config, copied from docs/spec.md. Links, dates and amounts are placeholders.
+# yaml-language-server: $schema=../config/warsha.schema.json
+project: acme-booking
+type: client            # client | internal
+client:
+  name: Acme
+  contact: account-lead
+
+refs:
+  competitors:
+    - https://example.com/competitor-a
+    - https://example.com/competitor-b
+  ui_liked:
+    - https://example.com/site-they-love
+  ui_disliked:
+    - https://example.com/site-they-hate
+  brand_assets: ./brand/
+
+constraints:
+  deadline: 2027-01-31
+  budget_usd: 12000
+
+effort:
+  preset: standard       # spike | standard | flagship | design-led | admin-tool
+  overrides:
+    ui: 5
+    research: 2
+
+autopilot:
+  default: notify        # gate | notify | autopilot
+  stages:
+    research: gate
+    edge: gate
+    ui: gate
+    ship: gate
+  always_gate:
+    first_production_deploy: true
+    client_messages: true
+  undo_window_hours: 24
+
+limits:
+  review_round_cap: 3    # set by the review dial unless stated
+  ci_retry_cap: 2
+  stage_budget_alert: 0.8
+
+models:                  # tier to model, one place to update
+  fast: haiku
+  mid: sonnet
+  top: opus
+  peak: fable
+
+ui:
+  tracks: [public, admin]
+  galleries: [awwwards, godly, mobbin, refero]
+  human_designer_pass: true
+
+stack:
+  profile: web           # web | backend-heavy
+
+i18n:
+  locales: [en]          # add ar to turn on Arabic and right-to-left
+  default: en
+
+content:
+  image_model: gpt-image # swap in one line
+  image_api_key_set: false   # false means labelled placeholders
+
+security:
+  pr_review: true
+  deep_audit: true
+  scanners: [secrets, dependencies]
+
+seo_aeo: true            # required on public pages
+
+monitoring:
+  sentry_project: acme-booking
+  posthog_project: acme-booking
+  ship_gate: [events, errors, replay, alerts, privacy]

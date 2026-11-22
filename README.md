@@ -177,10 +177,25 @@ The orchestrator is a single skill, `run-stage`. It reads the config and the pro
 - **v2:** webhooks trigger agents at once.
 State lives in Linear and the repo, never in a chat session. Every stage is safe to run again.
  
+## Repo layout
+ 
+| Path | What it is |
+|---|---|
+| [docs/spec.md](docs/spec.md) | The full build spec |
+| [config/warsha.schema.json](config/warsha.schema.json) | JSON Schema for a project's `warsha.yaml` |
+| [examples/](examples/) | Example configs for a client project and an internal Spike run |
+| [pipeline/stages.yaml](pipeline/stages.yaml) | The eleven stages, their outputs and gates |
+| [pipeline/effort.yaml](pipeline/effort.yaml) | Dial levels and presets |
+| [skills/run-stage/](skills/run-stage/SKILL.md) | The v0 orchestrator skill (draft) |
+| [templates/](templates/) | Decision issue and experiment log templates |
+ 
+Run `npm install` once, then `npm run validate` to check every example config and the pipeline files against the schema. CI runs the same check on every push.
+ 
 ## Roadmap
  
+- [x] Config schema, stage definitions and effort presets
 - [ ] Starter template with monitoring, localization and lint rules
-- [ ] `run-stage` skill (v0)
+- [ ] `run-stage` skill (v0). A first draft is in `skills/run-stage`.
 - [ ] Custom skills: reference scout, design critic, image reviewer, tracking reviewer, scorecard
 - [ ] First full run on an internal product
 - [ ] First client project

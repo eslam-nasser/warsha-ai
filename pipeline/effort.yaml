@@ -1,0 +1,35 @@
+# Effort dials and presets. Source: docs/spec.md, section Effort dials.
+# A preset fills every dial from 1 to 5. Config `effort.overrides` then replaces single dials.
+# Model names are tiers. config `models` maps each tier to the current model.
+
+levels:
+  1: { models: [fast], options: 1, review_rounds: 1, extras: [] }
+  2: { models: [mid], options: 2, review_rounds: 1, extras: [] }
+  3: { models: [mid], planning_and_review_model: top, options: 3, review_rounds: 3, extras: [critic] }
+  4: { models: [top], options: 4, review_rounds: 4, extras: [critic, second_reviewer] }
+  5: { models: [top], hardest_calls_model: peak, options: 5, option_rounds: 2, review_rounds: 5, extras: [second_model_check, human_specialist_optional] }
+
+# The spec fixes only the ranges (Spike 1 to 2, Flagship 4 to 5, Design-led UI 5 and the rest 2 to 3,
+# Admin tool UI 2 with Build and Review 4). The single values inside those ranges are first picks to tune.
+presets:
+  spike:      { intake: 1, clarify: 1, research: 2, edge: 1, ui: 2, spec: 1, build: 2, review: 1, security: 2, ship: 1, monitor: 1 }
+  standard:   { intake: 3, clarify: 3, research: 3, edge: 3, ui: 3, spec: 3, build: 3, review: 3, security: 3, ship: 3, monitor: 3 }
+  flagship:   { intake: 4, clarify: 5, research: 5, edge: 5, ui: 5, spec: 4, build: 4, review: 5, security: 5, ship: 4, monitor: 4 }
+  design-led: { intake: 2, clarify: 3, research: 2, edge: 3, ui: 5, spec: 2, build: 3, review: 3, security: 3, ship: 2, monitor: 2 }
+  admin-tool: { intake: 2, clarify: 3, research: 2, edge: 2, ui: 2, spec: 3, build: 4, review: 4, security: 3, ship: 3, monitor: 3 }
+
+# What a dial changes, per stage. low = 1 to 2, mid = 3, high = 4 to 5.
+per_stage:
+  clarify:  { low: 1 question round, mid: 2 rounds, high: 3 rounds plus a challenge pass on the idea }
+  research: { low: One pass on named competitors only, mid: Deep research, high: Deep research plus comparable markets }
+  edge:     { low: 1 recommendation, mid: 3 options, high: 3 options each attacked by a critic }
+  ui:       { low: 1 concept from 10 refs, mid: 3 concepts from 15 to 20 refs, high: 5 concepts in two rounds plus a human designer pass }
+  spec:     { low: Short spec, mid: PRD and architecture, high: PRD, architecture and a risk review }
+  build:    { low: One agent per issue, mid: Same plus a test coverage target, high: Same plus a second agent on hard issues }
+  review:   { low: Code review only, mid: Code, UX and security, high: All reviewers on a different model plus browser QA on every flow }
+
+image_candidates: { low: 2, mid: 4, high: 8 }
+
+# Each stage has a token budget from its dial. At this share of the budget
+# without finishing, the orchestrator opens an unstick decision.
+budget_alert_default: 0.8
